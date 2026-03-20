@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 fastapi
 groq
 pydantic
 uvicorn
-=======
-fastapi
-groq
-pydantic
->>>>>>> 39a751b6541b2ea8436e08bdf995641d40e60018
