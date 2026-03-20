@@ -16,7 +16,6 @@ app.add_middleware(
 )
 
 # --- GROQ AI SETUP ---
-# We use os.environ.get so Render securely injects the key without exposing it on GitHub
 API_KEY = os.environ.get("GROQ_API_KEY")
 if not API_KEY:
     print("WARNING: No Groq API Key found. Make sure it is set in Render Environment Variables.")
@@ -27,10 +26,12 @@ class DictionaryRequest(BaseModel):
     word: str
     context: str = ""
 
+# Updated to handle Vercel's pathing
 @app.get("/api")
 async def health_check():
     return {"status": "Server is running perfectly with Groq!"}
 
+# Updated to /api/dictionary
 @app.post("/api/dictionary")
 async def get_smart_definition(request: DictionaryRequest):
     try:
@@ -84,10 +85,10 @@ class ChatRequest(BaseModel):
     question: str
     context: str = ""
 
+# Updated to /api/chat
 @app.post("/api/chat")
 async def chat_with_ai(request: ChatRequest):
     try:
-        # We give the AI the user's question AND the text they just translated
         prompt = f"""
         You are a professional expert AI tutor. 
         Context: "{request.context}"
@@ -101,7 +102,6 @@ async def chat_with_ai(request: ChatRequest):
             model="llama-3.3-70b-versatile", 
         )
         
-        # Notice we don't force JSON here, just plain text!
         return {"answer": chat_completion.choices[0].message.content}
         
     except Exception as e:
