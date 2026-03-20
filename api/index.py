@@ -16,23 +16,35 @@ app.add_middleware(
 )
 
 # --- GROQ AI SETUP ---
-# We use os.environ.get so Render securely injects the key without exposing it on GitHub
+# FIX: Added proper error raising so Vercel shows a clear error, not a 500 crash
 API_KEY = os.environ.get("GROQ_API_KEY")
-if not API_KEY:
-    print("WARNING: No Groq API Key found. Make sure it is set in Render Environment Variables.")
 
-client = Groq(api_key=API_KEY)
+def get_client():
+    if not API_KEY:
+        raise HTTPException(
+            status_code=503,
+            detail="GROQ_API_KEY is not configured."
+        )
+    return Groq(api_key=API_KEY)
+
 
 class DictionaryRequest(BaseModel):
     word: str
     context: str = ""
 
-@app.get("/")
+class ChatRequest(BaseModel):
+    question: str
+    context: str = ""
+
+
+@app.get("/api")
 async def health_check():
     return {"status": "Server is running perfectly with Groq!"}
 
-@app.post("/dictionary")
+
+@app.post("/api/dictionary")
 async def get_smart_definition(request: DictionaryRequest):
+    client = get_client()
     try:
         text = request.word.strip()
         word_count = len(text.split())
@@ -77,17 +89,16 @@ async def get_smart_definition(request: DictionaryRequest):
         response_text = chat_completion.choices[0].message.content
         return json.loads(response_text)
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"AI Error: {str(e)}")
-    
-class ChatRequest(BaseModel):
-    question: str
-    context: str = ""
 
-@app.post("/chat")
+
+@app.post("/api/chat")
 async def chat_with_ai(request: ChatRequest):
+    client = get_client()
     try:
-        # We give the AI the user's question AND the text they just translated
         prompt = f"""
         You are a professional expert AI tutor. 
         Context: "{request.context}"
@@ -101,8 +112,9 @@ async def chat_with_ai(request: ChatRequest):
             model="llama-3.3-70b-versatile", 
         )
         
-        # Notice we don't force JSON here, just plain text!
         return {"answer": chat_completion.choices[0].message.content}
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"AI Error: {str(e)}")
