@@ -1,0 +1,394 @@
+/* --- GLOBAL STYLES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+body {
+    background-color: #f3f4f6; 
+    color: #1f2937;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* --- DARK MODE STYLES --- */
+body.dark { background-color: #111827; color: #f9fafb; }
+body.dark .app-header { background-color: #1f2937; border-bottom: 1px solid #374151; }
+body.dark .brand h1 { color: #f9fafb; }
+body.dark .brand .subtitle { color: #9ca3af; }
+body.dark .icon-btn { color: #d1d5db; }
+body.dark .zoom-controls, body.dark .pagination { background: #374151; border-color: #4b5563; color: white; }
+body.dark .slide-btn { color: #d1d5db; }
+body.dark .slide-btn:hover { background: #4b5563; color: #f9fafb; }
+body.dark #page-num { background: transparent; color: white; border: none; }
+body.dark .pdf-section { background-color: #000000; } 
+body.dark .translation-sidebar { background: #1f2937; border-color: #374151; }
+body.dark .translation-sidebar h3 { color: #f9fafb; border-bottom-color: #3b82f6; }
+body.dark .translation-output { color: #d1d5db; }
+
+/* --- HEADER & NAVIGATION (FLEX LAYOUT) --- */
+.app-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    z-index: 10;
+    padding: 12px 24px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+.brand { display: flex; flex-direction: column; }
+.brand h1 { font-size: 1.3rem; color: #111827; font-weight: 700; line-height: 1.2; }
+.brand .subtitle { font-size: 0.85rem; color: #6b7280; font-weight: 500; }
+
+.toolbar-center { display: flex; gap: 16px; align-items: center; justify-content: center; flex: 1; }
+.nav-right { display: flex; align-items: center; gap: 12px; flex: 1; justify-content: flex-end; }
+.mobile-only { display: none !important; }
+
+/* --- BUTTONS & CONTROLS --- */
+.icon-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #374151; display: flex; align-items: center; justify-content: center; }
+
+.zoom-controls, .pagination {
+    display: flex;
+    align-items: center;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.slide-btn { 
+    background: none; 
+    border: none; 
+    width: 36px;  
+    height: 36px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;   
+    cursor: pointer; 
+    color: #4b5563; 
+    font-size: 1.1rem; 
+    font-weight: bold; 
+    transition: background 0.2s; 
+}
+.slide-btn:hover { background: #e5e7eb; color: #1f2937; }
+#zoom-level-text { padding: 0 8px; font-size: 0.9rem; font-weight: 600; min-width: 50px; text-align: center; }
+
+.page-info { padding: 0 12px; font-size: 0.9rem; font-weight: 600; }
+#page-num { width: 35px; text-align: center; border: none; background: transparent; font-size: 0.95rem; font-weight: bold; outline: none;}
+
+.upload-btn {
+    background-color: #3b82f6;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+.upload-btn:hover { background-color: #2563eb; }
+
+/* --- APP LAYOUT --- */
+.app-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* --- PDF SECTION --- */
+.pdf-section {
+    flex: 2;
+    overflow: auto; 
+    padding: 24px; 
+    background-color: #e5e7eb;
+    /* Changed from display: flex to display: block to fix the left-scroll cut-off issue */
+    display: block; 
+}
+
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #6b7280; height: 100%; width: 100%;}
+.empty-state h2 { margin-top: 16px; color: #374151; }
+body.dark .empty-state h2 { color: #d1d5db; }
+
+/* --- THE PDF RENDER FIX --- */
+#pdf-wrapper {
+    position: relative;
+    background: white;
+    user-select: none;
+    -webkit-user-select: none;
+    outline: none !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    /* Safe centering that allows left scrolling when zoomed */
+    margin: 0 auto; 
+    width: fit-content; 
+}
+
+#pdf-render { display: block; outline: none !important; pointer-events: none; }
+body.dark #pdf-wrapper { background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+
+.textLayer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; opacity: 1; line-height: 1.0; user-select: text; -webkit-user-select: text; }
+.textLayer * { outline: none !important; border: none !important; caret-color: transparent !important; }
+.textLayer > span { color: rgba(0, 0, 0, 0.001) !important; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; background: none !important; }
+body.dark .textLayer > span { color: rgba(255, 255, 255, 0.001) !important; }
+.textLayer ::selection { background: rgba(0, 71, 171, 0.3) !important; }
+.textLayer ::-moz-selection { background: rgba(0, 71, 171, 0.3) !important; }
+
+/* --- DESKTOP SIDEBAR --- */
+.translation-sidebar {
+    flex: 1;
+    max-width: 400px;
+    background: white;
+    border-left: 1px solid #e5e7eb;
+    padding: 24px;
+    overflow-y: auto;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.translation-sidebar h3 { font-size: 1.1rem; color: #111827; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #3b82f6; display: inline-block; }
+.translation-output { font-size: 1.05rem; line-height: 1.6; color: #4b5563; }
+
+/* --- PROGRESS BAR --- */
+.progress-container { margin-bottom: 15px; }
+.progress-text { font-size: 0.9rem; margin-bottom: 5px; color: #6b7280; font-weight: bold; }
+.progress-bar-bg { width: 100%; height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden; }
+.progress-bar-fill { height: 100%; width: 0%; background-color: #3b82f6; transition: width 0.3s ease; }
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+    /* Allow native mobile scrolling */
+    body { height: auto; overflow-y: auto; }
+    
+    .app-header { padding: 12px 16px; }
+    
+    .header-content { flex-wrap: wrap; }
+    
+    /* Order elements carefully to prevent overlap. Navs on row 1, Toolbar on row 2 */
+    .nav-left { order: 1; flex: none; width: 50%; }
+    .nav-right { order: 2; flex: none; width: 50%; justify-content: flex-end; }
+    .toolbar-center { 
+        order: 3; 
+        width: 100%; 
+        flex: none; 
+        justify-content: space-between; 
+        margin-top: 12px; 
+        padding-top: 12px; 
+        border-top: 1px solid #e5e7eb; 
+    }
+    body.dark .toolbar-center { border-top-color: #374151; }
+
+    .upload-text { display: none; } 
+    .upload-btn { padding: 8px; }
+
+    /* Change layout to block so Translation pushes below the PDF */
+    .app-container { display: flex; flex-direction: column; height: auto; overflow: visible; }
+    
+    .pdf-section { 
+        flex: none;
+        width: 100%;
+        height: auto;
+        min-height: 60vh; /* Gives room to read */
+        padding: 12px !important; 
+    }
+    
+    #pdf-wrapper { box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 4px; }
+
+    /* Static translation bar that stays below the PDF */
+    .translation-sidebar {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border-left: none;
+        border-top: 2px solid #3b82f6;
+        border-radius: 0;
+        box-shadow: none;
+        transform: none; 
+        padding: 24px;
+    }
+    body.dark .translation-sidebar { border-top: 2px solid #3b82f6; }
+}
+
+/* --- NEW SIDEBAR CONTROLS (Font Size & OCR Button) --- */
+.sidebar-controls {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+body.dark .sidebar-controls {
+    border-bottom-color: #374151;
+}
+.font-size-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #4b5563;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+body.dark .font-size-control {
+    color: #d1d5db;
+}
+#font-size-slider {
+    flex: 1;
+    cursor: pointer;
+}
+#scan-page-btn:hover {
+    background-color: #059669 !important; /* Slightly darker green on hover */
+}
+#bangla-text {
+    font-size: 18px; /* Default size matching slider */
+    transition: font-size 0.2s ease;
+}
+
+/* --- FOOTER STYLES --- */
+.app-footer {
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    color: #6b7280; /* Subtle grey for light mode */
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0; /* Prevents it from being squished by the PDF viewer */
+    z-index: 10;
+}
+
+body.dark .app-footer {
+    background-color: #1f2937;
+    color: #9ca3af; /* Lighter grey for dark mode */
+    border-top-color: #374151;
+}
+
+.app-footer strong {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Subtle, professional heartbeat animation */
+.app-footer .heart {
+    display: inline-block;
+    color: #ef4444; 
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.15); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.15); }
+    60% { transform: scale(1); }
+    100% { transform: scale(1); }
+}
+
+/* =========================================
+   --- AI CHAT INTERFACE ---
+   ========================================= */
+.minimal-chat-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e7eb; /* Just a clean line to separate from translation */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.chat-input-wrapper {
+    display: flex;
+    gap: 8px;
+    position: relative;
+}
+
+/* Kept the nice input bar */
+.chat-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #f9fafb;
+    color: #1f2937;
+}
+
+.chat-input:focus {
+    border-color:#3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    background-color: #ffffff;
+}
+
+/* Kept the nice button */
+.chat-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.chat-submit-btn:hover {
+    background-color: #2563eb;
+}
+
+.chat-submit-btn:active {
+    transform: scale(0.95);
+}
+
+.chat-response-area {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+/* --- DARK MODE SUPPORT --- */
+body.dark .minimal-chat-container {
+    border-top-color: #374151;
+}
+
+body.dark .chat-heading {
+    color: #f3f4f6;
+}
+
+body.dark .chat-input {
+    background-color: #1f2937; /* Blends nicely with the dark sidebar */
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+
+body.dark .chat-input::placeholder {
+    color: #9ca3af;
+}
+
+body.dark .chat-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+body.dark .chat-response-area {
+    color: #d1d5db;
+}

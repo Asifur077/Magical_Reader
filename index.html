@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>চলো বাংলায় পড়ি</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-content">
+            <div class="nav-left">
+                <div class="brand">
+                    <h1>Magical Reader ✨</h1>
+                    <span class="subtitle">Read, Understand, Learn</span>
+                </div>
+            </div>
+            
+            <div class="toolbar-center">
+                <div class="zoom-controls">
+                    <button id="zoom-out" class="slide-btn">-</button>
+                    <span id="zoom-level-text">100%</span>
+                    <button id="zoom-in" class="slide-btn">+</button>
+                </div>
+                
+                <div class="pagination">
+                    <button id="prev-page" class="slide-btn">◀</button>
+                    <div class="page-info">
+                        <input type="number" id="page-num" value="1" min="1"> / <span id="page-count">0</span>
+                    </div>
+                    <button id="next-page" class="slide-btn">▶</button>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <input type="file" id="pdf-upload" accept="application/pdf" hidden>
+                <label for="pdf-upload" class="upload-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span class="upload-text">Upload</span>
+                </label>
+                <button id="theme-toggle" class="icon-btn">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <div class="pdf-section">
+            <div id="upload-prompt" class="empty-state">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <h2>No PDF Loaded</h2>
+                <p>Click "Upload" to start reading and translating.</p>
+            </div>
+
+            <div id="pdf-wrapper" style="display: none;">
+                <canvas id="pdf-render"></canvas>
+            </div>
+        </div>
+
+        <aside class="translation-sidebar">
+            <h3>Bangla Translation</h3>
+
+            <div class="sidebar-controls">
+                <div class="font-size-control">
+                    <label for="font-size-slider">Text Size:</label>
+                    <input type="range" id="font-size-slider" min="14" max="36" value="18">
+                </div>
+                <button id="scan-page-btn" class="upload-btn" style="display: none; margin-top: 12px; width: 100%; justify-content: center; background-color: #10b981;">
+                    📷 Scan Page
+                </button>
+            </div>
+
+            <div id="ocr-progress-container" class="progress-container" style="display: none;">
+                <p id="ocr-status-text" class="progress-text">Bringing the Gem 💎</p>
+                <div class="progress-bar-bg">
+                    <div id="ocr-progress-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="bangla-text" class="translation-output">
+                Upload a PDF and  highlight specific words or sections to see the Magic happen!✨
+            </div>
+
+            <div id="ai-chat-container" class="minimal-chat-container">
+                <h3 class="chat-heading">Ask The Wizard 🎩</h3>
+                
+                <div class="chat-input-wrapper">
+                    <input type="text" id="ai-chat-input" class="chat-input" placeholder="Feel free to ask anything..." autocomplete="off">
+                    <button id="ai-chat-btn" class="chat-submit-btn" title="Send Message">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="ai-chat-response" class="chat-response-area"></div>
+            </div>
+
+        </aside>
+    </main>
+
+    </main>
+
+    <footer class="app-footer">
+        <p>Made with <span class="heart">❤️</span> by <strong>Asif Chowdhury</strong> (KU ECE)</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
