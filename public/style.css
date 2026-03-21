@@ -1,63 +1,93 @@
-/* --- GLOBAL STYLES --- */
-* {
+/* =============================================
+   GLOBAL RESET & BASE
+   ============================================= */
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background-color: #f3f4f6; 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f3f4f6;
     color: #1f2937;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100dvh; /* dvh = dynamic viewport height, correct on mobile browsers */
     overflow: hidden;
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* --- DARK MODE STYLES --- */
+/* =============================================
+   DARK MODE
+   ============================================= */
 body.dark { background-color: #111827; color: #f9fafb; }
-body.dark .app-header { background-color: #1f2937; border-bottom: 1px solid #374151; }
+body.dark .app-header { background-color: #1f2937; border-bottom-color: #374151; }
 body.dark .brand h1 { color: #f9fafb; }
 body.dark .brand .subtitle { color: #9ca3af; }
 body.dark .icon-btn { color: #d1d5db; }
-body.dark .zoom-controls, body.dark .pagination { background: #374151; border-color: #4b5563; color: white; }
+body.dark .zoom-controls,
+body.dark .pagination { background: #374151; border-color: #4b5563; color: white; }
 body.dark .slide-btn { color: #d1d5db; }
 body.dark .slide-btn:hover { background: #4b5563; color: #f9fafb; }
-body.dark #page-num { background: transparent; color: white; border: none; }
-body.dark .pdf-section { background-color: #000000; } 
+body.dark #page-num { background: transparent; color: white; }
+body.dark .pdf-section { background-color: #0a0a0a; }
 body.dark .translation-sidebar { background: #1f2937; border-color: #374151; }
-body.dark .translation-sidebar h3 { color: #f9fafb; border-bottom-color: #3b82f6; }
+body.dark .sidebar-header h3 { color: #f9fafb; }
 body.dark .translation-output { color: #d1d5db; }
+body.dark .sidebar-controls { border-bottom-color: #374151; }
+body.dark .font-size-control { color: #d1d5db; }
+body.dark .sidebar-badge { background: rgba(59,130,246,0.2); color: #93c5fd; }
+body.dark .empty-state-icon { color: #4b5563; }
+body.dark .empty-state h2 { color: #d1d5db; }
+body.dark .empty-state p { color: #6b7280; }
+body.dark .empty-upload-btn { background: #374151; color: #f9fafb; border-color: #4b5563; }
+body.dark .empty-upload-btn:hover { background: #4b5563; }
+body.dark .app-footer { background: #1f2937; color: #6b7280; border-top-color: #374151; }
+body.dark .ai-chat-section { border-top-color: #374151; }
+body.dark .chat-heading { color: #f3f4f6; }
+body.dark .chat-input { background: #111827; border-color: #4b5563; color: #f9fafb; }
+body.dark .chat-input::placeholder { color: #6b7280; }
+body.dark .chat-input:focus { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(96,165,250,0.15); background: #1f2937; }
+body.dark .chat-response-area { color: #d1d5db; }
+body.dark .scan-btn { background: #065f46; color: #d1fae5; border-color: #047857; }
+body.dark .scan-btn:hover { background: #047857; }
 
-/* --- HEADER & NAVIGATION (FLEX LAYOUT) --- */
+/* =============================================
+   HEADER
+   ============================================= */
 .app-header {
-    background-color: #ffffff;
+    background: #ffffff;
     border-bottom: 1px solid #e5e7eb;
-    z-index: 10;
-    padding: 12px 24px;
+    padding: 10px 20px;
+    z-index: 20;
+    flex-shrink: 0;
 }
 
 .header-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
-.nav-left { display: flex; align-items: center; gap: 16px; flex: 1; }
-.brand { display: flex; flex-direction: column; }
-.brand h1 { font-size: 1.3rem; color: #111827; font-weight: 700; line-height: 1.2; }
-.brand .subtitle { font-size: 0.85rem; color: #6b7280; font-weight: 500; }
+.nav-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+.brand h1 { font-size: 1.2rem; color: #111827; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.brand .subtitle { font-size: 0.78rem; color: #6b7280; }
 
-.toolbar-center { display: flex; gap: 16px; align-items: center; justify-content: center; flex: 1; }
-.nav-right { display: flex; align-items: center; gap: 12px; flex: 1; justify-content: flex-end; }
-.mobile-only { display: none !important; }
+.toolbar-center {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+}
 
-/* --- BUTTONS & CONTROLS --- */
-.icon-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #374151; display: flex; align-items: center; justify-content: center; }
+.nav-right { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; }
 
+/* =============================================
+   TOOLBAR CONTROLS
+   ============================================= */
 .zoom-controls, .pagination {
     display: flex;
     align-items: center;
@@ -65,330 +95,501 @@ body.dark .translation-output { color: #d1d5db; }
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     overflow: hidden;
+    height: 36px;
 }
 
-.slide-btn { 
-    background: none; 
-    border: none; 
-    width: 36px;  
-    height: 36px; 
+.slide-btn {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;   
-    cursor: pointer; 
-    color: #4b5563; 
-    font-size: 1.1rem; 
-    font-weight: bold; 
-    transition: background 0.2s; 
+    cursor: pointer;
+    color: #4b5563;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: background 0.15s;
+    flex-shrink: 0;
 }
-.slide-btn:hover { background: #e5e7eb; color: #1f2937; }
-#zoom-level-text { padding: 0 8px; font-size: 0.9rem; font-weight: 600; min-width: 50px; text-align: center; }
+.slide-btn:hover { background: #e5e7eb; color: #111827; }
 
-.page-info { padding: 0 12px; font-size: 0.9rem; font-weight: 600; }
-#page-num { width: 35px; text-align: center; border: none; background: transparent; font-size: 0.95rem; font-weight: bold; outline: none;}
+#zoom-level-text {
+    padding: 0 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 44px;
+    text-align: center;
+}
+
+.page-info { padding: 0 8px; font-size: 0.85rem; font-weight: 600; }
+#page-num {
+    width: 32px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 700;
+    outline: none;
+    color: inherit;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #374151;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.15s;
+}
+.icon-btn:hover { background: #f3f4f6; }
 
 .upload-btn {
-    background-color: #3b82f6;
+    background: #3b82f6;
     color: white;
-    padding: 8px 16px;
+    padding: 0 14px;
+    height: 36px;
     border-radius: 8px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: background 0.2s;
+    gap: 6px;
+    transition: background 0.15s;
+    white-space: nowrap;
+    border: none;
 }
-.upload-btn:hover { background-color: #2563eb; }
+.upload-btn:hover { background: #2563eb; }
 
-/* --- APP LAYOUT --- */
+/* =============================================
+   MAIN LAYOUT
+   ============================================= */
 .app-container {
     display: flex;
     flex: 1;
     overflow: hidden;
-    position: relative;
+    min-height: 0; /* critical for flex children to scroll */
 }
 
-/* --- PDF SECTION --- */
+/* =============================================
+   PDF SECTION
+   ============================================= */
 .pdf-section {
     flex: 2;
-    overflow: auto; 
-    padding: 24px; 
-    background-color: #e5e7eb;
-    /* Changed from display: flex to display: block to fix the left-scroll cut-off issue */
-    display: block; 
+    min-width: 0;
+    overflow: auto;
+    padding: 20px;
+    background: #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #6b7280; height: 100%; width: 100%;}
-.empty-state h2 { margin-top: 16px; color: #374151; }
-body.dark .empty-state h2 { color: #d1d5db; }
+/* EMPTY STATE — properly centered via flex */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1;
+    width: 100%;
+    padding: 40px 20px;
+    gap: 12px;
+}
 
-/* --- THE PDF RENDER FIX --- */
+.empty-state-icon {
+    color: #9ca3af;
+    margin-bottom: 4px;
+}
+
+.empty-state h2 {
+    font-size: 1.3rem;
+    color: #374151;
+    font-weight: 700;
+}
+
+.empty-state p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+.empty-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 10px 20px;
+    background: white;
+    color: #374151;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.empty-upload-btn:hover { background: #f9fafb; border-color: #9ca3af; }
+
+/* PDF WRAPPER */
 #pdf-wrapper {
     position: relative;
     background: white;
     user-select: none;
     -webkit-user-select: none;
-    outline: none !important;
-    border: none !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    /* Safe centering that allows left scrolling when zoomed */
-    margin: 0 auto; 
-    width: fit-content; 
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    border-radius: 4px;
+    width: fit-content;
+    flex-shrink: 0;
 }
 
-#pdf-render { display: block; outline: none !important; pointer-events: none; }
-body.dark #pdf-wrapper { background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+#pdf-render {
+    display: block;
+    pointer-events: none;
+    outline: none;
+    border-radius: 4px;
+}
 
-.textLayer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; opacity: 1; line-height: 1.0; user-select: text; -webkit-user-select: text; }
-.textLayer * { outline: none !important; border: none !important; caret-color: transparent !important; }
-.textLayer > span { color: rgba(0, 0, 0, 0.001) !important; position: absolute; white-space: pre; cursor: text; transform-origin: 0% 0%; background: none !important; }
-body.dark .textLayer > span { color: rgba(255, 255, 255, 0.001) !important; }
-.textLayer ::selection { background: rgba(0, 71, 171, 0.3) !important; }
-.textLayer ::-moz-selection { background: rgba(0, 71, 171, 0.3) !important; }
+/* TEXT LAYER */
+.textLayer {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    overflow: hidden;
+    opacity: 1;
+    line-height: 1;
+    user-select: text;
+    -webkit-user-select: text;
+}
+.textLayer * { outline: none; border: none; caret-color: transparent; }
+.textLayer > span {
+    color: rgba(0,0,0,0.001) !important;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+    background: none !important;
+}
+body.dark .textLayer > span { color: rgba(255,255,255,0.001) !important; }
+.textLayer ::selection { background: rgba(37, 99, 235, 0.25) !important; }
+.textLayer ::-moz-selection { background: rgba(37, 99, 235, 0.25) !important; }
 
-/* --- DESKTOP SIDEBAR --- */
+/* =============================================
+   TRANSLATION SIDEBAR
+   ============================================= */
 .translation-sidebar {
     flex: 1;
-    max-width: 400px;
+    min-width: 300px;
+    max-width: 380px;
     background: white;
     border-left: 1px solid #e5e7eb;
-    padding: 24px;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.translation-sidebar h3 { font-size: 1.1rem; color: #111827; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #3b82f6; display: inline-block; }
-.translation-output { font-size: 1.05rem; line-height: 1.6; color: #4b5563; }
-
-/* --- PROGRESS BAR --- */
-.progress-container { margin-bottom: 15px; }
-.progress-text { font-size: 0.9rem; margin-bottom: 5px; color: #6b7280; font-weight: bold; }
-.progress-bar-bg { width: 100%; height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden; }
-.progress-bar-fill { height: 100%; width: 0%; background-color: #3b82f6; transition: width 0.3s ease; }
-
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 768px) {
-    /* Allow native mobile scrolling */
-    body { height: auto; overflow-y: auto; }
-    
-    .app-header { padding: 12px 16px; }
-    
-    .header-content { flex-wrap: wrap; }
-    
-    /* Order elements carefully to prevent overlap. Navs on row 1, Toolbar on row 2 */
-    .nav-left { order: 1; flex: none; width: 50%; }
-    .nav-right { order: 2; flex: none; width: 50%; justify-content: flex-end; }
-    .toolbar-center { 
-        order: 3; 
-        width: 100%; 
-        flex: none; 
-        justify-content: space-between; 
-        margin-top: 12px; 
-        padding-top: 12px; 
-        border-top: 1px solid #e5e7eb; 
-    }
-    body.dark .toolbar-center { border-top-color: #374151; }
-
-    .upload-text { display: none; } 
-    .upload-btn { padding: 8px; }
-
-    /* Change layout to block so Translation pushes below the PDF */
-    .app-container { display: flex; flex-direction: column; height: auto; overflow: visible; }
-    
-    .pdf-section { 
-        flex: none;
-        width: 100%;
-        height: auto;
-        min-height: 60vh; /* Gives room to read */
-        padding: 12px !important; 
-    }
-    
-    #pdf-wrapper { box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 4px; }
-
-    /* Static translation bar that stays below the PDF */
-    .translation-sidebar {
-        position: static;
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        border-left: none;
-        border-top: 2px solid #3b82f6;
-        border-radius: 0;
-        box-shadow: none;
-        transform: none; 
-        padding: 24px;
-    }
-    body.dark .translation-sidebar { border-top: 2px solid #3b82f6; }
+    overflow-x: hidden;
 }
 
-/* --- NEW SIDEBAR CONTROLS (Font Size & OCR Button) --- */
-.sidebar-controls {
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e5e7eb;
-}
-body.dark .sidebar-controls {
-    border-bottom-color: #374151;
-}
-.font-size-control {
+.sidebar-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    color: #4b5563;
-    font-size: 0.95rem;
-    font-weight: 600;
-}
-body.dark .font-size-control {
-    color: #d1d5db;
-}
-#font-size-slider {
-    flex: 1;
-    cursor: pointer;
-}
-#scan-page-btn:hover {
-    background-color: #059669 !important; /* Slightly darker green on hover */
-}
-#bangla-text {
-    font-size: 18px; /* Default size matching slider */
-    transition: font-size 0.2s ease;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
 }
 
-/* --- FOOTER STYLES --- */
-.app-footer {
-    text-align: center;
-    padding: 10px 20px;
-    font-size: 0.85rem;
-    color: #6b7280; /* Subtle grey for light mode */
-    background-color: #ffffff;
-    border-top: 1px solid #e5e7eb;
-    flex-shrink: 0; /* Prevents it from being squished by the PDF viewer */
-    z-index: 10;
+.sidebar-header h3 {
+    font-size: 1rem;
+    color: #111827;
+    font-weight: 700;
 }
 
-body.dark .app-footer {
-    background-color: #1f2937;
-    color: #9ca3af; /* Lighter grey for dark mode */
-    border-top-color: #374151;
-}
-
-.app-footer strong {
-    font-weight: 600;
+.sidebar-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(59,130,246,0.1);
+    color: #2563eb;
+    padding: 2px 8px;
+    border-radius: 20px;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-/* Subtle, professional heartbeat animation */
-.app-footer .heart {
-    display: inline-block;
-    color: #ef4444; 
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    15% { transform: scale(1.15); }
-    30% { transform: scale(1); }
-    45% { transform: scale(1.15); }
-    60% { transform: scale(1); }
-    100% { transform: scale(1); }
-}
-
-/* =========================================
-   --- AI CHAT INTERFACE ---
-   ========================================= */
-.minimal-chat-container {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #e5e7eb; /* Just a clean line to separate from translation */
+.sidebar-controls {
+    padding: 12px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.chat-heading {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0;
-}
-
-.chat-input-wrapper {
+.font-size-control {
     display: flex;
-    gap: 8px;
-    position: relative;
+    align-items: center;
+    gap: 10px;
+    color: #6b7280;
 }
+.font-label-sm { font-size: 0.8em; font-weight: 600; }
+.font-label-lg { font-size: 1.3em; font-weight: 600; }
+#font-size-slider { flex: 1; cursor: pointer; accent-color: #3b82f6; }
 
-/* Kept the nice input bar */
-.chat-input {
-    flex: 1;
-    padding: 10px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    outline: none;
-    transition: all 0.2s ease;
-    background-color: #f9fafb;
-    color: #1f2937;
-}
-
-.chat-input:focus {
-    border-color:#3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-    background-color: #ffffff;
-}
-
-/* Kept the nice button */
-.chat-submit-btn {
+.scan-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #3b82f6;
+    gap: 6px;
+    padding: 9px 14px;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1.5px solid #6ee7b7;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.scan-btn:hover { background: #d1fae5; }
+
+.translation-output {
+    padding: 16px 20px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #374151;
+    flex: 1;
+    transition: font-size 0.2s;
+}
+
+/* PROGRESS BAR */
+.progress-container { padding: 0 20px 12px; flex-shrink: 0; }
+.progress-text { font-size: 0.82rem; color: #6b7280; font-weight: 600; margin-bottom: 6px; }
+.progress-bar-bg { width: 100%; height: 6px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+.progress-bar-fill { height: 100%; width: 0%; background: #3b82f6; border-radius: 4px; transition: width 0.3s ease; }
+
+/* =============================================
+   AI CHAT SECTION
+   ============================================= */
+.ai-chat-section {
+    border-top: 1px solid #e5e7eb;
+    padding: 16px 20px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-section-header { display: flex; align-items: center; gap: 8px; }
+
+.chat-heading {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.chat-input-wrapper { display: flex; gap: 8px; }
+
+.chat-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    outline: none;
+    background: #f9fafb;
+    color: #1f2937;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+}
+.chat-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    background: white;
+}
+
+.chat-submit-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #3b82f6;
     color: white;
     border: none;
-    border-radius: 8px;
-    padding: 0 14px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.1s;
 }
-
-.chat-submit-btn:hover {
-    background-color: #2563eb;
-}
-
-.chat-submit-btn:active {
-    transform: scale(0.95);
-}
+.chat-submit-btn:hover { background: #2563eb; }
+.chat-submit-btn:active { transform: scale(0.93); }
 
 .chat-response-area {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: #374151;
+    min-height: 0;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.app-footer {
+    text-align: center;
+    padding: 8px 20px;
+    font-size: 0.8rem;
+    color: #6b7280;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    z-index: 10;
+}
+.heart { color: #ef4444; }
+
+/* =============================================
+   MOBILE TRANSLATE PILL BUTTON
+   ============================================= */
+.mobile-translate-pill {
+    display: none; /* shown via JS on touch devices after selection */
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2563eb;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 100px;
+    font-weight: 700;
     font-size: 0.95rem;
-    line-height: 1.6;
-    color: #4b5563;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.45);
+    cursor: pointer;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    border: none;
+    letter-spacing: 0.2px;
+    animation: pill-pop 0.2s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-/* --- DARK MODE SUPPORT --- */
-body.dark .minimal-chat-container {
-    border-top-color: #374151;
+@keyframes pill-pop {
+    from { transform: translateX(-50%) scale(0.8); opacity: 0; }
+    to   { transform: translateX(-50%) scale(1);   opacity: 1; }
 }
 
-body.dark .chat-heading {
-    color: #f3f4f6;
+/* =============================================
+   MOBILE RESPONSIVE — max-width: 768px
+   ============================================= */
+@media (max-width: 768px) {
+    /* Allow full-page native scroll */
+    body {
+        height: auto;
+        min-height: 100dvh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* --- Header: stack toolbar below brand row --- */
+    .app-header { padding: 10px 14px; }
+
+    .header-content {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .nav-left  { order: 1; flex: 1; min-width: 0; }
+    .nav-right { order: 2; flex: none; }
+    .toolbar-center {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        padding-top: 10px;
+        border-top: 1px solid #e5e7eb;
+        gap: 8px;
+    }
+    body.dark .toolbar-center { border-top-color: #374151; }
+
+    /* Hide "Upload PDF" text on mobile, show icon only */
+    .upload-text { display: none; }
+    .upload-btn { padding: 0 10px; }
+
+    /* --- Main: stack PDF above sidebar --- */
+    .app-container {
+        flex-direction: column;
+        overflow: visible;
+        height: auto;
+    }
+
+    /* --- PDF section --- */
+    .pdf-section {
+        width: 100%;
+        min-height: 55dvh;
+        padding: 12px;
+        flex: none;
+        align-items: center;
+        overflow: auto;
+    }
+
+    /* Empty state: full height centering within min-height section */
+    .empty-state {
+        min-height: 50dvh;
+        justify-content: center;
+        padding: 30px 16px;
+    }
+
+    .empty-state h2 { font-size: 1.15rem; }
+    .empty-state p { font-size: 0.875rem; }
+
+    .empty-upload-btn {
+        padding: 12px 24px;
+        font-size: 0.95rem;
+    }
+
+    /* --- Sidebar: full width below PDF --- */
+    .translation-sidebar {
+        flex: none;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        border-left: none;
+        border-top: 3px solid #3b82f6;
+        overflow-y: visible;
+        overflow-x: hidden;
+    }
+    body.dark .translation-sidebar { border-top-color: #3b82f6; }
+
+    .sidebar-header { padding: 14px 16px 10px; }
+    .sidebar-controls { padding: 10px 16px; }
+    .translation-output { padding: 14px 16px; }
+    .ai-chat-section { padding: 14px 16px; }
+
+    /* Bigger touch targets for chat input */
+    .chat-input { font-size: 1rem; padding: 12px 14px; }
+    .chat-submit-btn { width: 46px; height: 46px; }
+
+    /* Mobile translate pill: slightly higher above footer */
+    .mobile-translate-pill { bottom: 70px; }
+
+    /* Zoom/pagination buttons larger on mobile */
+    .slide-btn { width: 36px; height: 38px; font-size: 1.05rem; }
+    #zoom-level-text { min-width: 40px; font-size: 0.82rem; }
+
+    /* Footer compact */
+    .app-footer { padding: 8px 16px; font-size: 0.75rem; }
 }
 
-body.dark .chat-input {
-    background-color: #1f2937; /* Blends nicely with the dark sidebar */
-    border-color: #4b5563;
-    color: #f9fafb;
-}
-
-body.dark .chat-input::placeholder {
-    color: #9ca3af;
-}
-
-body.dark .chat-input:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
-}
-
-body.dark .chat-response-area {
-    color: #d1d5db;
+/* Extra small phones */
+@media (max-width: 380px) {
+    .brand h1 { font-size: 1rem; }
+    .brand .subtitle { display: none; }
+    .toolbar-center { gap: 6px; }
+    #zoom-level-text { min-width: 34px; padding: 0 4px; }
 }
