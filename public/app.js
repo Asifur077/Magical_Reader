@@ -54,7 +54,7 @@ async function getSmartTranslation(text) {
 
     } catch (error) {
         console.error("AI API Error:", error);
-        return "☕ Server is taking a short break. Try Later!";
+        return "☕ Server is taking a short break. Try again!";
     }
 }
 
@@ -87,7 +87,7 @@ if (!isTouchDevice()) {
             if (selectedText.length > 0) {
                 triggerTranslation(selectedText);
             }
-        }, 1000);
+        }, 900);
     });
 }
 
